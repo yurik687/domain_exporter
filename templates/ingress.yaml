@@ -1,15 +1,14 @@
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "prometheus-blackbox-exporter.fullname" . -}}
+{{- $fullName := include "blackbox-exporter.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
-{{- $kubeVersion := include "prometheus-blackbox-exporter.kubeVersion" . -}}
-{{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" $kubeVersion)) }}
+{{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
   {{- if not (hasKey .Values.ingress.annotations "kubernetes.io/ingress.class") }}
   {{- $_ := set .Values.ingress.annotations "kubernetes.io/ingress.class" .Values.ingress.className}}
   {{- end }}
 {{- end }}
-{{- if semverCompare ">=1.19-0" $kubeVersion -}}
+{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1
-{{- else if semverCompare ">=1.14-0" $kubeVersion -}}
+{{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1beta1
 {{- else -}}
 apiVersion: extensions/v1beta1
@@ -17,18 +16,14 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
-  namespace: {{ template "prometheus-blackbox-exporter.namespace" . }}
   labels:
-    {{- include "prometheus-blackbox-exporter.labels" . | nindent 4 }}
-    {{- if .Values.ingress.labels }}
-{{ toYaml .Values.ingress.labels | indent 4 }}
-    {{- end}}
+    {{- include "blackbox-exporter.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if and .Values.ingress.className (semverCompare ">=1.18-0" $kubeVersion) }}
+  {{- if and .Values.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
   ingressClassName: {{ .Values.ingress.className }}
   {{- end }}
   {{- if .Values.ingress.tls }}
@@ -48,11 +43,11 @@ spec:
         paths:
           {{- range .paths }}
           - path: {{ .path }}
-            {{- if and .pathType (semverCompare ">=1.18-0" $kubeVersion) }}
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
             pathType: {{ .pathType }}
             {{- end }}
             backend:
-              {{- if semverCompare ">=1.19-0" $kubeVersion }}
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
               service:
                 name: {{ $fullName }}
                 port:
