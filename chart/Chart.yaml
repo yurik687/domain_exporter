@@ -1,0 +1,16 @@
+apiVersion: v2
+description: Prometheus domain Exporter
+name: prometheus-domain-exporter
+version: 1.0.0
+appVersion: 0.0.1
+home: https://github.com/yurik687/domain_exporter
+sources:
+  - https://github.com/yurik687/domain_exporter
+keywords:
+  - prometheus
+  - monitoring
+  - domain-exporter
+maintainers:
+  - name: yurik687
+    email: yurik687@gmail.com
+type: application

@@ -1,0 +1,18 @@
+{{- if .Values.podDisruptionBudget -}}
+{{ if $.Capabilities.APIVersions.Has "policy/v1/PodDisruptionBudget" -}}
+apiVersion: policy/v1
+{{- else -}}
+apiVersion: policy/v1beta1
+{{- end }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ template "prometheus-domain-exporter.fullname" . }}
+  namespace: {{ template "prometheus-domain-exporter.namespace" . }}
+  labels:
+    {{- include "prometheus-domain-exporter.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "prometheus-domain-exporter.selectorLabels" . | nindent 6 }}
+{{ toYaml .Values.podDisruptionBudget | indent 2 }}
+{{- end }}
