@@ -48,7 +48,7 @@ extraContainers: []
   # - name: oAuth2-proxy
   #   args:
   #     - -https-address=:9116
-  #     - -upstream=http://localhost:9115
+  #     - -upstream=http://localhost:9222
   #     - -skip-auth-regex=^/metrics
   #     - -openshift-delegate-urls={"/":{"group":"monitoring.coreos.com","resource":"prometheuses","verb":"get"}}
   #   image: openshift/oauth-proxy:v1.1.0
@@ -166,11 +166,11 @@ service:
   annotations: {}
   labels: {}
   type: ClusterIP
-  port: 9115
+  port: 9222
 
-# Only changes container port. Application port can be changed with extraArgs (--web.listen-address=:9115)
+# Only changes container port. Application port can be changed with extraArgs (--web.listen-address=:9222)
 # https://github.com/prometheus/blackbox_exporter/blob/998037b5b40c1de5fee348ffdea8820509d85171/main.go#L55
-containerPort: 9115
+containerPort: 9222
 
 serviceAccount:
   # Specifies whether a ServiceAccount should be created
