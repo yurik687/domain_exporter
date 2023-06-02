@@ -9,7 +9,7 @@ sources:
 keywords:
   - prometheus
   - monitoring
-  - docker-exporter
+  - domain-exporter
 maintainers:
   - name: yurik687
     email: yurik687@gmail.com
