@@ -40,6 +40,12 @@ helm.sh/chart: {{ include "prometheus-domain-exporter.chart" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- if .Values.releaseLabel }}
+release: {{ .Release.Name }}
+{{- end }}
+{{- if .Values.commonLabels }}
+{{ toYaml .Values.commonLabels }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -60,3 +66,28 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Return the appropriate apiVersion for rbac.
+*/}}
+{{- define "rbac.apiVersion" -}}
+{{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1" }}
+{{- print "rbac.authorization.k8s.io/v1" -}}
+{{- else -}}
+{{- print "rbac.authorization.k8s.io/v1beta1" -}}
+{{- end -}}
+{{- end -}}
+
+
+{{- define "prometheus-domain-exporter.namespace" -}}
+  {{- if .Values.namespaceOverride -}}
+    {{- .Values.namespaceOverride -}}
+  {{- else -}}
+    {{- .Release.Namespace -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Enable overriding Kubernetes version for some use cases */}}
+{{- define "prometheus-domain-exporter.kubeVersion" -}}
+  {{- default .Capabilities.KubeVersion.Version .Values.kubeVersionOverride -}}
+{{- end -}}
