@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "blackbox-exporter.name" -}}
+{{- define "prometheus-domain-exporter.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "blackbox-exporter.fullname" -}}
+{{- define "prometheus-domain-exporter.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "blackbox-exporter.chart" -}}
+{{- define "prometheus-domain-exporter.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "blackbox-exporter.labels" -}}
-helm.sh/chart: {{ include "blackbox-exporter.chart" . }}
-{{ include "blackbox-exporter.selectorLabels" . }}
+{{- define "prometheus-domain-exporter.labels" -}}
+helm.sh/chart: {{ include "prometheus-domain-exporter.chart" . }}
+{{ include "prometheus-domain-exporter.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "blackbox-exporter.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "blackbox-exporter.name" . }}
+{{- define "prometheus-domain-exporter.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "prometheus-domain-exporter.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "blackbox-exporter.serviceAccountName" -}}
+{{- define "prometheus-domain-exporter.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "blackbox-exporter.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "prometheus-domain-exporter.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
